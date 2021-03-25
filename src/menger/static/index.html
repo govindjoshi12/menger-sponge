@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="static/main.css" />
+    <title>WebGL - Menger</title>
+  </head>
+  <body>
+    <canvas id="glCanvas" class="card" width="800" height="600">
+      Your browser does not support HTML5 </canvas
+    ><br />
+
+    <section id="test-view" class="test-suite">
+      <button id="run-button" v-on:click="run">Run Test Suite</button>
+      <button id="run-button" v-on:click="expand_results(true)">Expand All Results</button>
+      <button id="run-button" v-on:click="expand_results(false)">Hide All Results</button>
+      <button id="run-button" v-on:click="show_all_tests()">Show Hidden Tests</button>
+      <ol class="tests">
+        <li
+          tabindex="0"
+          v-for="test in tests"
+          v-if="test.visible"
+          class="card"
+          v-bind:class="{
+            unknown: test.lastResult.status === 'Unknown',
+            passed: test.lastResult.status === 'Passed',
+            failed: test.lastResult.status === 'Failed',
+            manual: test.lastResult.status === 'Manual Verification Needed'
+          }"
+        >
+          <details
+            v-if="test.lastResult.status !== 'Passed' && test.lastResult.status !== 'Unknown'"
+          >
+            <summary>{{ test.name }}</summary>
+            <img
+              v-if="test.lastResult.status === 'Manual Verification Needed'"
+              v-bind:src="test.lastResult.img"
+              alt="Generated Image"
+            />
+            <img
+              v-if="test.lastResult.status === 'Manual Verification Needed'"
+              v-bind:src="test.lastResult.ref_img"
+              alt="Reference Image"
+            />
+            <code v-if="test.lastResult.status === 'Failed'"
+              >{{ test.lastResult.reason }}</code
+            >
+          </details>
+          <span v-if="test.lastResult.status === 'Passed'"
+            >{{ test.name }}</span
+          >
+          <span v-if="test.lastResult.status === 'Unknown'">
+              <button v-on:click="test.lastResult = run_test(test.test)" >⟲</button>
+              <button v-on:click="test.visible = false;" >hide</button>
+              {{ test.name }}</span>
+        </li>
+      </ol>
+    </section>
+
+<script type="module" src="./index.js"></script>
+
+    <br />
+  </body>
+</html>

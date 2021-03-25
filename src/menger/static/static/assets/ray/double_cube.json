@@ -1,0 +1,35 @@
+{
+	"camPos": [7, 0, 0],
+	"camDir": [1, 0, 0],
+	"pointLights": [
+		{
+			"position": [0, 0, 10],
+			"color": [0.5, 0.5, 0.5],
+			"const": 0.25,
+			"linear": 0.003,
+			"quadratic": 0.0000455
+		}
+	],
+	"directionalLights": [
+		{
+			"direction": [1, 0, 0],
+			"color": [1, 1, 1]
+		}
+	],
+	"materials": [
+		{
+			"mesh": "Cube",
+			"ambient": [0.1, 0.1, 0.1],
+			"diffuse": [0.0, 0.6, 1.0],
+			"specular": [0.4, 0.4, 0.4],
+			"shininess": 234
+		},
+		{
+			"mesh": "Cube.001",
+			"ambient": [0.1, 0.1, 0.1],
+			"diffuse": [0.0, 0.6, 1.0],
+			"specular": [0.4, 0.4, 0.4],
+			"shininess": 234
+		}
+	]
+}
