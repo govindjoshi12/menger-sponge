@@ -16,7 +16,8 @@ interface IMengerSponge {
 export class MengerSponge implements IMengerSponge {
 
   // TODO: sponge data structures
-  
+  public level: number;
+
   constructor(level: number) {
 	  this.setLevel(level);
 	  // TODO: other initialization	
@@ -34,13 +35,23 @@ export class MengerSponge implements IMengerSponge {
   
   public setLevel(level: number)
   {
+    this.level = level;
 	  // TODO: initialize the cube
   }
 
   /* Returns a flat Float32Array of the sponge's vertex positions */
   public positionsFlat(): Float32Array {
 	  // TODO: right now this makes a single triangle. Make the cube fractal instead.
-	  return new Float32Array([1.0, 0.0, 0.0, 1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0]);
+	  let min = -0.5;
+    let max = 0.5; 
+    return new Float32Array([min, min, min, 1.0, 
+                            min, min, max, 1.0, 
+                            min, max, max, 1.0,
+                            min, max, min, 1.0,
+                            max, min, max, 1.0,
+                            max, min, min, 1.0,
+                            max, max, min, 1.0,
+                            max, max, max, 1.0,]);
   }
 
   /**
@@ -48,7 +59,8 @@ export class MengerSponge implements IMengerSponge {
    */
   public indicesFlat(): Uint32Array {
     // TODO: right now this makes a single triangle. Make the cube fractal instead.
-    return new Uint32Array([0, 1, 2]);
+
+    return new Uint32Array([0, 1, 2, 3, 4, 5]);
   }
 
   /**
@@ -56,7 +68,14 @@ export class MengerSponge implements IMengerSponge {
    */
   public normalsFlat(): Float32Array {
 	  // TODO: right now this makes a single triangle. Make the cube fractal instead.
-	  return new Float32Array([0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+	  return new Float32Array([0.0, 0.0, 1.0, 0.0, 
+                            0.0, 0.0, 1.0, 0.0, 
+                            0.0, 0.0, 1.0, 0.0,
+                            0.0, 0.0, 1.0, 0.0,
+                            0.0, 0.0, -1.0, 0.0,
+                            0.0, 0.0, -1.0, 0.0,
+                            0.0, 0.0, -1.0, 0.0,
+                            0.0, 0.0, -1.0, 0.0,]);
   }
 
   /**

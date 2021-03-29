@@ -116,7 +116,11 @@ for (let i = 1; i < 5; i++) {
     "Menger Sponge Level " + i,
     "./static/img/menger/level_" + i + "_ref.png",
     (animation) => {
-      dragMouse(canvas, -1, 1, 15);
+      animation.reset();
+      dragMouse(canvas, 1, -1, 10);
+      pressKey(window, "KeyW", 30);
+      pressKey(window, "KeyD", 5);
+      dragMouse(canvas, -1, 1, 20);
       pressKey(window, "Digit" + i, 1);
       animation.draw();
     }
@@ -126,17 +130,18 @@ for (let i = 1; i < 5; i++) {
 /**
  * Tests the mouse orbital rotation
  */
-mengerTests.integrationTest(
+/*mengerTests.integrationTest(
   "Mouse Orbital Rotation",
   "./static/img/menger/mouse_orbit_rotation_ref.png",
   (animation) => {
-
+    animation.reset();
     pressKey(window, "Digit2", 1);
+    pressKey(window, "KeyC", 1);
     dragMouse(canvas, -1, 1, 10);
     animation.draw();
 
   }
-);
+);*/
 
 /**
  * Tests the mouse fps rotation
@@ -145,8 +150,8 @@ mengerTests.integrationTest(
   "Mouse FPS Rotation",
   "./static/img/menger/mouse_fps_rotation_ref.png",
   (animation) => {
+    animation.reset();
     pressKey(window, "Digit2", 1);
-    pressKey(window, "KeyC", 1);
     dragMouse(canvas, -1, -1, 10);
     animation.draw();
   }
@@ -159,6 +164,7 @@ mengerTests.integrationTest(
   "Mouse Zoom In",
   "./static/img/menger/mouse_zoom_in_ref.png",
   (animation) => {
+    animation.reset();
     pressKey(window, "Digit2", 1);
     dragMouse(canvas, -1, -1, 35, true);
     animation.draw();
@@ -172,6 +178,7 @@ mengerTests.integrationTest(
   "Mouse Zoom Out",
   "./static/img/menger/mouse_zoom_out_ref.png",
   (animation) => {
+    animation.reset();
     pressKey(window, "Digit2", 1);
     dragMouse(canvas, -1, 1, 35, true);
     animation.draw();
@@ -181,15 +188,17 @@ mengerTests.integrationTest(
 /**
  * Tests W key Orbital Mode
  */
-mengerTests.integrationTest(
+/*mengerTests.integrationTest(
   "W Key (Orbital Mode)",
   "./static/img/menger/w_orbital_ref.png",
   (animation) => {
+    animation.reset();
     pressKey(window, "Digit2", 1);
+    pressKey(window, "KeyC", 1);
     pressKey(window, "KeyW", 35);
     animation.draw();
   }
-);
+);*/
 
 /**
  * Tests W Key in FPS Mode
@@ -198,8 +207,8 @@ mengerTests.integrationTest(
   "W Key (FPS Mode)",
   "./static/img/menger/w_fps_ref.png",
   (animation) => {
+    animation.reset();
     pressKey(window, "Digit2", 1);
-    pressKey(window, "KeyC", 1);
     dragMouse(canvas, 1, 0, 5);
     pressKey(window, "KeyW", 30);
     animation.draw();
@@ -209,15 +218,17 @@ mengerTests.integrationTest(
 /**
  * Tests S key Orbital Mode
  */
-mengerTests.integrationTest(
+/*mengerTests.integrationTest(
   "S Key (Orbital Mode)",
   "./static/img/menger/s_orbital_ref.png",
   (animation) => {
+    animation.reset();
     pressKey(window, "Digit2", 1);
+    pressKey(window, "KeyC", 1);  
     pressKey(window, "KeyS", 35);
     animation.draw();
   }
-);
+);*/
 
 /**
  * Tests S Key in FPS Mode
@@ -226,8 +237,8 @@ mengerTests.integrationTest(
   "S Key (FPS Mode)",
   "./static/img/menger/s_fps_ref.png",
   (animation) => {
+    animation.reset();
     pressKey(window, "Digit2", 1);
-    pressKey(window, "KeyC", 1);
     dragMouse(canvas, 1, 0, 10);
     pressKey(window, "KeyS", 30);
     animation.draw();
@@ -237,16 +248,18 @@ mengerTests.integrationTest(
 /**
  * Tests A key Orbital Mode
  */
-mengerTests.integrationTest(
+/*mengerTests.integrationTest(
   "A Key (Orbital Mode)",
   "./static/img/menger/a_orbital_ref.png",
   (animation) => {
+    animation.reset();
     pressKey(window, "Digit2", 1);
     pressKey(window, "KeyW", 35);
+    pressKey(window, "KeyC", 1);    
     pressKey(window, "KeyA", 5);
     animation.draw();
   }
-);
+);*/
 
 /**
  * Tests A Key in FPS Mode
@@ -256,9 +269,9 @@ mengerTests.integrationTest(
   "./static/img/menger/a_fps_ref.png",
   (animation) => {
     if (animation) {
+      animation.reset();
       pressKey(window, "Digit2", 1);
       pressKey(window, "KeyW", 35);
-      pressKey(window, "KeyC", 1);
       pressKey(window, "KeyA", 10);
       animation.draw();
     }
@@ -268,18 +281,20 @@ mengerTests.integrationTest(
 /**
  * Tests D key Orbital Mode
  */
-mengerTests.integrationTest(
+/*mengerTests.integrationTest(
   "D Key (Orbital Mode)",
   "./static/img/menger/d_orbital_ref.png",
   (animation) => {
     if (animation) {
+      animation.reset();
       pressKey(window, "Digit2", 1);
       pressKey(window, "KeyW", 35);
+      pressKey(window, "KeyC", 1);
       pressKey(window, "KeyD", 5);
       animation.draw();
     }
   }
-);
+);*/
 
 /**
  * Tests D Key in FPS Mode
@@ -289,9 +304,9 @@ mengerTests.integrationTest(
   "./static/img/menger/d_fps_ref.png",
   (animation) => {
     if (animation) {
+      animation.reset();
       pressKey(window, "Digit2", 1);
       pressKey(window, "KeyW", 35);
-      pressKey(window, "KeyC", 1);
       pressKey(window, "KeyD", 10);
       animation.draw();
     }
@@ -306,8 +321,9 @@ mengerTests.integrationTest(
   "./static/img/menger/left_arrow_ref.png",
   (animation) => {
     if (animation) {
+      animation.reset();
       pressKey(window, "Digit2", 1);
-      dragMouse(canvas, -1, 1, 15);
+      //dragMouse(canvas, -1, 1, 15);
       pressKey(window, "ArrowLeft", 10);
       animation.draw();
     }
@@ -322,8 +338,9 @@ mengerTests.integrationTest(
   "./static/img/menger/right_arrow_ref.png",
   (animation) => {
     if (animation) {
+      animation.reset();
       pressKey(window, "Digit2", 1);
-      dragMouse(canvas, -1, 1, 15);
+      //dragMouse(canvas, -1, 1, 15);
       pressKey(window, "ArrowRight", 10);
       animation.draw();
     }
@@ -333,17 +350,19 @@ mengerTests.integrationTest(
 /**
  * Tests Up arrow key in orbital mode
  */
-mengerTests.integrationTest(
+/*mengerTests.integrationTest(
   "Up Arrow Key (Orbital Mode)",
   "./static/img/menger/up_arrow_orbital_ref.png",
   (animation) => {
     if (animation) {
+      animation.reset();
       pressKey(window, "Digit2", 1);
+      pressKey(window, "KeyC", 1);
       pressKey(window, "ArrowUp", 4);
       animation.draw();
     }
   }
-);
+);*/
 
 /**
  * Tests up arrow in fps mode
@@ -353,8 +372,8 @@ mengerTests.integrationTest(
   "./static/img/menger/up_arrow_fps_ref.png",
   (animation) => {
     if (animation) {
+      animation.reset();
       pressKey(window, "Digit2", 1);
-      pressKey(window, "KeyC", 1);
       pressKey(window, "ArrowUp", 13);
       animation.draw();
     }
@@ -364,17 +383,19 @@ mengerTests.integrationTest(
 /**
  * Tests down arrow key in orbital mode
  */
-mengerTests.integrationTest(
+/*mengerTests.integrationTest(
   "Down Arrow Key (Orbital Mode)",
   "./static/img/menger/down_arrow_orbital_ref.png",
   (animation) => {
     if (animation) {
+      animation.reset();
       pressKey(window, "Digit2", 1);
+      pressKey(window, "KeyC", 1);
       pressKey(window, "ArrowDown", 4);
       animation.draw();
     }
   }
-);
+);*/
 
 /**
  * Tests down arrow in fps mode
@@ -384,8 +405,8 @@ mengerTests.integrationTest(
   "./static/img/menger/down_arrow_fps_ref.png",
   (animation) => {
     if (animation) {
+      animation.reset();
       pressKey(window, "Digit2", 1);
-      pressKey(window, "KeyC", 1);
       pressKey(window, "ArrowDown", 10);
       animation.draw();
     }
