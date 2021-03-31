@@ -21,12 +21,12 @@ export class MengerSponge implements IMengerSponge {
   private currNormals: number[];
 
   // TODO: sponge data structures
-  private level: number = 1;
+  private level: number = -1; // First iteration
   private min: number = -1;
-  private max: number = 1;
+  private length: number = 2;
   private dirty: boolean = false;
 
-  private numVertex: number = 8;
+  private numVertex: number = 36;
   private coordDim: number = 4;
 
   constructor(level: number) {
@@ -43,70 +43,115 @@ export class MengerSponge implements IMengerSponge {
 
   // Returns an array of positions representing a cube 
   // bounded by min and max
-  public newCube(min: number, max: number): number[] {
+  public newCube(x: number, y: number, z: number, l: number): void {
     // First 4 coordinates are bottom face, from (0,0,0) clockwise
     // Next 4 are clockwise from (0,1,0)
-    return [min, min, min, 1.0, 
-            max, min, min, 1.0, 
-            max, min, max, 1.0, 
-            min, min, max, 1.0,
-            min, max, min, 1.0, 
-            max, max, min, 1.0, 
-            max, max, max, 1.0, 
-            min, max, max, 1.0];
+    let cubePos = 
+    // Bottom face
+     [x, y, z, 1.0,
+      x + l, y, z, 1.0,
+      x + l, y, z + l, 1.0,
+      
+      x, y, z, 1.0,
+      x + l, y, z + l, 1.0,
+      x, y, z + l, 1.0,
+    
+      x + l, y, z + l, 1.0,
+      x + l, y + l, z + l, 1.0, 
+      x + l, y + l, z, 1.0,
+
+      x + l, y, z + l, 1.0,
+      x + l, y + l, z, 1.0, 
+      x + l, y, z, 1.0, 
+      
+      x, y + l, z, 1.0, 
+      x + l, y + l, z, 1.0, 
+      x + l, y + l, z + l, 1.0, 
+
+      x, y + l, z, 1.0,
+      x + l, y + l, z + l, 1.0, 
+      x, y + l, z + l, 1.0,
+
+      x, y + l, z + l, 1.0,
+      x, y, z + l, 1.0,
+      x, y, z, 1.0,
+
+      x, y + l, z + l, 1.0,
+      x, y, z, 1.0,
+      x, y + l, z, 1.0, 
+
+      x, y, z + l, 1.0,
+      x, y + l, z + l, 1.0,
+      x + l, y + l, z + l, 1.0, 
+
+      x, y, z + l, 1.0,
+      x + l, y + l, z + l, 1.0, 
+      x + l, y, z + l, 1.0,
+
+      x, y, z, 1.0,
+      x, y + l, z, 1.0,
+      x + l, y + l, z, 1.0, 
+
+      x, y, z, 1.0,
+      x + l, y + l, z, 1.0, 
+      x + l, y, z, 1.0]; 
+
+    cubePos.forEach(function(elem) {
+      this.currPositions.push(elem);
+    }, this)
+
+    // Compute Normals
+    for(let i = 0; i < cubePos.length; i += 12) {
+      let a: Vec3 = new Vec3([cubePos[i], cubePos[i+1], cubePos[i+2]]);
+      let b: Vec3 = new Vec3([cubePos[i+4], cubePos[i+5], cubePos[i+6]]);
+      let c: Vec3 = new Vec3([cubePos[i+8], cubePos[i+9], cubePos[i+10]]);
+
+      let normal = Vec3.cross(Vec3.difference(b, a), Vec3.difference(c, a));
+
+      // Same normal for all three verts
+      for(let j = 0; j < 3; j++)
+        this.currNormals.push(normal[0], normal[1], normal[2], 0.0);
+    }
+    // let offset = ((this.currPositions.length / this.numVertex) - 1) * this.numVertex;
+    // This is mathematically equivalent to length - 8. Does this make sense? Yes.
+    let offset = (this.currPositions.length / this.coordDim) - this.numVertex;
+    // console.log(offset);
+    let indices = this.cubeIndices(offset);
+    indices.forEach(function(elem) {
+      this.currIndices.push(elem);
+    }, this)
   }
 
-  public cubeIndicesOffset(offset: number): number[] {
-    let arr: number[] = [0, 1, 2, // Bottom Face 
-                        0, 2, 3, 
-                        2, 6, 5, // Right Face
-                        2, 5, 1,
-                        4, 5, 6, // Top Face
-                        4, 6, 7,
-                        7, 3, 0, // Left Face
-                        7, 0, 4,
-                        3, 7, 6, // Front Face
-                        3, 6, 2,
-                        0, 4, 5, // Back Face
-                        0, 5, 1];
+  public cubeIndices(offset: number): number[] {
+    // Array from 0 to 35
+    let arr: number[] = [...Array(this.numVertex).keys()];
     arr = arr.map(n => n + offset);
     return arr;
-  }
-
-  // TODO: How to compute normals?
-  public computeNormals(): number[] {
-    return [1.0, 0.0, 1.0, 0.0, 
-            0.0, 0.0, 1.0, 0.0, 
-            1.0, 0.0, 1.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
-            1.0, 0.0, 1.0, 0.0,
-            1.0, 0.0, 1.0, 0.0,
-            1.0, 0.0, 1.0, 0.0,
-            1.0, 0.0, 1.0, 0.0];
   }
 
   // Assuming that the recursively generated
   // Cube is at the bottom-back-left corner
   public translations(factor: number): number[] {
-    let arr: number[] = [1, 0, 0, 0,
-                         2, 0, 0, 0,
-                         0, 1, 0, 0,
-                         2, 1, 0, 0,
-                         0, 2, 0, 0,
-                         1, 2, 0, 0,
-                         2, 2, 0, 0,
-                         0, 0, 1, 0,
-                         2, 0, 1, 0,
-                         0, 2, 1, 0,
-                         2, 2, 1, 0,
-                         0, 0, 2, 0,
-                         1, 0, 2, 0,
-                         2, 0, 2, 0,
-                         0, 1, 2, 0,
-                         2, 1, 2, 0,
-                         0, 2, 2, 0,
-                         1, 2, 2, 0,
-                         2, 2, 2, 0];
+    let arr: number[] = [0, 0, 0, 0,
+                        1, 0, 0, 0,
+                        2, 0, 0, 0,
+                        0, 0, 1, 0,
+                        2, 0, 1, 0,
+                        0, 0, 2, 0,
+                        1, 0, 2, 0,
+                        2, 0, 2, 0,
+                        0, 1, 0, 0,
+                        2, 1, 0, 0,
+                        0, 1, 2, 0,
+                        2, 1, 2, 0,
+                        0, 2, 0, 0,
+                        1, 2, 0, 0,
+                        2, 2, 0, 0,
+                        0, 2, 1, 0,
+                        2, 2, 1, 0,
+                        0, 2, 2, 0,
+                        1, 2, 2, 0,
+                        2, 2, 2, 0];
     arr = arr.map(n => n * factor);
     return arr;
   }
@@ -125,52 +170,54 @@ export class MengerSponge implements IMengerSponge {
   public setLevel(level: number)
   {
     // TODO: initialize the cube
-    /*
-      // Starting with single base cube
-      this.currPositions = this.newCube(this.min, this.max);
-      this.currIndices = this.cubeIndicesOffset(0);
-      // Figure out how normals work
-      this.currNormals = this.computeNormals();
-    */
-    
+
     // No optimization. Remakes sponge every time.
-    this.resetDataStructures();
-    this.level = level;
-    console.log("Im choosing level: " + level);
-    this.recursiveMengerSponge(3, this.min, this.max);
-    this.computeNormals();
+    if(level != this.level) {
+      this.resetDataStructures();
+      this.level = level;
+      this.dirty = true;
+      console.log("level: " + level);
+      this.recursiveMengerSpongeXYZ(level, this.min, this.min, this.min, this.length);
+    }
+  }
+
+  // Attempting extremely slow method where every cube is recursively made
+  recursiveMengerSpongeXYZ(level: number, x: number, y: number, z: number, length: number): void {
+    // Base Case
+    if(level == 1) {
+      // Concat is much slower than push
+      this.newCube(x, y, z, length);
+      return;
+    }
+
+    let startIdx = this.currPositions.length;
+    let newLength = length / 3;
+
+    let translations = this.translations(newLength);
+    for(let i = 0; i < translations.length; i+=4) {
+      this.recursiveMengerSpongeXYZ(level - 1, x + translations[i],
+                                                y + translations[i+1],
+                                                z + translations[i+2], newLength);
+    }
   }
 
   // Wanted to return array of points, but
   // need to alter triangle indices array.
   // Thus, making changes within method
   // instead of just returning new arrays.
-  recursiveMengerSponge(level: number, min: number, max: number): void {
+  recursiveMengerSponge(level: number, min: number, length: number): void {
     // Base Case
     if(level == 1) {
       // Concat is much slower than push
-      let cubePos = this.newCube(min, max);
-      cubePos.forEach(function(elem) {
-        this.currPositions.push(elem);
-      }, this)
-
-      // let offset = ((this.currPositions.length / this.numVertex) - 1) * this.numVertex;
-      // This is mathematically equivalent to length - 8. Does this make sense? Yes.
-      let offset = (this.currPositions.length / this.coordDim) - this.numVertex;
-      // console.log(offset);
-      let indices = this.cubeIndicesOffset(offset);
-      indices.forEach(function(elem) {
-        this.currIndices.push(elem);
-      }, this)
-
+      this.newCube(min, min, min, length);
       return;
     }
 
     // Recursively make new cube which is 1/3 the size based on passed min and max
     // Make 20 copies and transform to appropriate locations (hardcode? for loop?)
     let startIdx = this.currPositions.length;
-    let newLength = (Math.abs(min) + Math.abs(max)) / 3;
-    this.recursiveMengerSponge(level - 1, min, min + newLength);
+    let newLength = length / 3;
+    this.recursiveMengerSponge(level - 1, min, newLength);
 
     // Need to transform this cube to each of the remaining 19 locations
     // and its triangle indicies to currIndices
@@ -191,7 +238,7 @@ export class MengerSponge implements IMengerSponge {
       }, this)
 
       let offset = (this.currPositions.length / this.coordDim) - currCube.length;
-      let indices = this.cubeIndicesOffset(offset);
+      let indices = this.cubeIndices(offset);
       indices.forEach(function(elem) {
         this.currIndices.push(elem);
       }, this)
