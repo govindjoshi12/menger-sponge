@@ -35,7 +35,9 @@ export let defaultFSText = `
 	
     
     void main () {
-        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        vec4 color = normalize(abs(normal));
+        color[3] = 1.0;
+        gl_FragColor = color;
     }
 `;
 

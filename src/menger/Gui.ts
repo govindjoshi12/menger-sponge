@@ -128,7 +128,11 @@ export class GUI implements IGUI {
   public drag(mouse: MouseEvent): void {
 	  
 	  // TODO: Your code here for left and right mouse drag
-	  
+	  let currX = mouse.screenX;
+    let currY = mouse.screenY;
+
+    //this.camera.rotate(vec, GUI.panSpeed)
+
   }
 
   /**
@@ -158,39 +162,40 @@ export class GUI implements IGUI {
 
     switch (key.code) {
       case "KeyW": {
-
+        this.camera.offset(this.camera.forward().negate(), GUI.zoomSpeed, true);
         break;
       }
       case "KeyA": {
-
+        this.camera.offset(this.camera.right().negate(), GUI.zoomSpeed, true);
         break;
       }
       case "KeyS": {
-
+        this.camera.offset(this.camera.forward(), GUI.zoomSpeed, true);
         break;
       }
       case "KeyD": {
-
+        this.camera.offset(this.camera.right(), GUI.zoomSpeed, true);
         break;
       }
       case "KeyR": {
-
+        this.reset();
         break;
       }
       case "ArrowLeft": {
-
+        // SUpposed to be roll but using for debugging sponge
+        this.camera.yaw(GUI.rollSpeed, false);
         break;
       }
       case "ArrowRight": {
-
+        this.camera.yaw(GUI.rollSpeed, true);
         break;
       }
       case "ArrowUp": {
-
+        this.camera.offset(this.camera.up(), GUI.zoomSpeed, true);
         break;
       }
       case "ArrowDown": {
-
+        this.camera.offset(this.camera.up().negate(), GUI.zoomSpeed, true);
         break;
       }
       case "Digit1": {
