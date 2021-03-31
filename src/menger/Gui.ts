@@ -194,19 +194,19 @@ export class GUI implements IGUI {
         break;
       }
       case "Digit1": {
-
+        this.sponge.setLevel(1);
         break;
       }
       case "Digit2": {
-
+        this.sponge.setLevel(2);
         break;
       }
       case "Digit3": {
-
+        this.sponge.setLevel(3);
         break;
       }
       case "Digit4": {
-
+        this.sponge.setLevel(4);
         break;
       }
       default: {
