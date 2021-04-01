@@ -22,8 +22,8 @@ export class MengerSponge implements IMengerSponge {
 
   // TODO: sponge data structures
   private level: number = -1; // First iteration
-  private min: number = -1;
-  private length: number = 2;
+  private min: number = -0.5;
+  private length: number = 1;
   private dirty: boolean = false;
 
   private numVertex: number = 36;
@@ -44,59 +44,6 @@ export class MengerSponge implements IMengerSponge {
   // Returns an array of positions representing a cube 
   // bounded by min and max
   public newCube(x: number, y: number, z: number, l: number): void {
-    // First 4 coordinates are bottom face, from (0,0,0) clockwise
-    // Next 4 are clockwise from (0,1,0)
-
-    // let cubePos = 
-    // // Bottom face
-    //  [x + l, y, z + l, 1.0,
-    //   x, y, z, 1.0,
-    //   x + l, y, z, 1.0,
-
-    //   x, y, z + l, 1.0,
-    //   x, y, z, 1.0,
-    //   x + l, y, z + l, 1.0,
-
-    //   x + l, y, z + l, 1.0,
-    //   x + l, y + l, z + l, 1.0, 
-    //   x + l, y + l, z, 1.0,
-
-    //   x + l, y, z + l, 1.0,
-    //   x + l, y + l, z, 1.0, 
-    //   x + l, y, z, 1.0, 
-
-    //   x, y + l, z, 1.0, 
-    //   x + l, y + l, z, 1.0, 
-    //   x + l, y + l, z + l, 1.0, 
-
-    //   x, y + l, z, 1.0,
-    //   x + l, y + l, z + l, 1.0, 
-    //   x, y + l, z + l, 1.0,
-
-    //   x, y + l, z + l, 1.0,
-    //   x, y, z + l, 1.0,
-    //   x, y, z, 1.0,
-
-    //   x, y + l, z + l, 1.0,
-    //   x, y, z, 1.0,
-    //   x, y + l, z, 1.0, 
-
-    //   x, y, z + l, 1.0,
-    //   x, y + l, z + l, 1.0,
-    //   x + l, y + l, z + l, 1.0, 
-
-    //   x, y, z + l, 1.0,
-    //   x + l, y + l, z + l, 1.0, 
-    //   x + l, y, z + l, 1.0,
-
-    //   x, y, z, 1.0,
-    //   x, y + l, z, 1.0,
-    //   x + l, y + l, z, 1.0, 
-
-    //   x, y, z, 1.0,
-    //   x + l, y + l, z, 1.0, 
-    //   x + l, y, z, 1.0]; 
-
     let cubePos =
       [
         x, y, z, 1.0, // triangle 1
@@ -252,7 +199,44 @@ export class MengerSponge implements IMengerSponge {
     }
   }
 
-  // Wanted to return array of points, but
+  /* Returns a flat Float32Array of the sponge's vertex positions */
+  public positionsFlat(): Float32Array {
+    // TODO: right now this makes a single triangle. Make the cube fractal instead.
+    // return new Float32Array([1.0, 0.0, 0.0, 1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0]);
+
+    return new Float32Array(this.currPositions);
+  }
+
+  /**
+   * Returns a flat Uint32Array of the sponge's face indices
+   */
+  public indicesFlat(): Uint32Array {
+    // TODO: right now this makes a single triangle. Make the cube fractal instead.
+    return new Uint32Array(this.currIndices);
+  }
+
+  /**
+   * Returns a flat Float32Array of the sponge's normals
+   */
+  public normalsFlat(): Float32Array {
+    // TODO: right now this makes a single triangle. Make the cube fractal instead.
+    // return new Float32Array([0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+
+    return new Float32Array(this.currNormals);
+  }
+
+  /**
+   * Returns the model matrix of the sponge
+   */
+  public uMatrix(): Mat4 {
+
+    // TODO: change this, if it's useful
+    const ret: Mat4 = new Mat4().setIdentity();
+
+    return ret;
+  }
+
+  // W.santed to return array of points, but
   // need to alter triangle indices array.
   // Thus, making changes within method
   // instead of just returning new arrays.
@@ -294,43 +278,6 @@ export class MengerSponge implements IMengerSponge {
         this.currIndices.push(elem);
       }, this)
     }
-  }
-
-  /* Returns a flat Float32Array of the sponge's vertex positions */
-  public positionsFlat(): Float32Array {
-    // TODO: right now this makes a single triangle. Make the cube fractal instead.
-    // return new Float32Array([1.0, 0.0, 0.0, 1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0]);
-
-    return new Float32Array(this.currPositions);
-  }
-
-  /**
-   * Returns a flat Uint32Array of the sponge's face indices
-   */
-  public indicesFlat(): Uint32Array {
-    // TODO: right now this makes a single triangle. Make the cube fractal instead.
-    return new Uint32Array(this.currIndices);
-  }
-
-  /**
-   * Returns a flat Float32Array of the sponge's normals
-   */
-  public normalsFlat(): Float32Array {
-    // TODO: right now this makes a single triangle. Make the cube fractal instead.
-    // return new Float32Array([0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
-
-    return new Float32Array(this.currNormals);
-  }
-
-  /**
-   * Returns the model matrix of the sponge
-   */
-  public uMatrix(): Mat4 {
-
-    // TODO: change this, if it's useful
-    const ret: Mat4 = new Mat4().setIdentity();
-
-    return ret;
   }
 
 }

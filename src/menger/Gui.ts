@@ -1,7 +1,7 @@
 import { Camera } from "../lib/webglutils/Camera.js";
 import { CanvasAnimation } from "../lib/webglutils/CanvasAnimation.js";
 import { MengerSponge } from "./MengerSponge.js";
-import { Mat4, Vec3 } from "../lib/TSM.js";
+import { Mat4, Vec3, Vec4 } from "../lib/TSM.js";
 
 /**
  * Might be useful for designing any animation GUI
@@ -56,7 +56,7 @@ export class GUI implements IGUI {
     this.sponge = sponge;
     this.animation = animation;
 
-	this.reset();
+    this.reset();
 
     this.registerEventListeners(canvas);
   }
@@ -65,13 +65,43 @@ export class GUI implements IGUI {
    * Resets the state of the GUI
    */
   public reset(): void {
-    this.fps = false;
+    this.fps = true;
     this.dragging = false;
     /* Create camera setup */
     this.camera = new Camera(
       new Vec3([0, 0, -6]),
       new Vec3([0, 0, 0]),
       new Vec3([0, 1, 0]),
+      45,
+      this.width / this.height,
+      0.1,
+      1000.0
+    );
+  }
+
+  public resetUp(): void {
+    this.fps = false;
+    this.dragging = false;
+    /* Create camera setup */
+    this.camera = new Camera(
+      new Vec3([0, 6, 0]),
+      new Vec3([0, 0, 0]),
+      new Vec3([1, 0, 0]),
+      45,
+      this.width / this.height,
+      0.1,
+      1000.0
+    );
+  }
+
+  public resetRight(): void {
+    this.fps = false;
+    this.dragging = false;
+    /* Create camera setup */
+    this.camera = new Camera(
+      new Vec3([-6, 0, 0]),
+      new Vec3([0, 0, 0]),
+      new Vec3([0, 0, 1]),
       45,
       this.width / this.height,
       0.1,
@@ -126,13 +156,44 @@ export class GUI implements IGUI {
    * @param mouse
    */
   public drag(mouse: MouseEvent): void {
-	  
-	  // TODO: Your code here for left and right mouse drag
-	  let currX = mouse.screenX;
+    let currX = mouse.screenX;
     let currY = mouse.screenY;
 
-    //this.camera.rotate(vec, GUI.panSpeed)
+    if (this.dragging) {
+      let delta_x = currX - this.prevX;
+      let delta_y = currY - this.prevY;
 
+      this.prevX = currX;
+      this.prevY = currY;
+
+      if (delta_x == 0 && delta_y == 0) {
+        return;
+      }
+
+      let origin = this.camera.pos();
+      let x = this.camera.right();
+      let y = this.camera.up();
+      let z = this.camera.forward();
+      let o = this.camera.pos();
+
+      let vals: number[] =
+        [x.x, x.y, x.z, 0,
+        y.x, y.y, y.z, 0,
+        z.x, z.y, z.z, 0,
+        o.x, o.y, o.z, 1];
+      let mat: Mat4 = new Mat4(vals);
+      let vec: Vec4 = new Vec4([-1 * delta_x, delta_y, this.camera.zFar(), 0]); // 1 to 0
+      let result = mat.multiplyVec4(vec);
+
+      let axis = Vec3.cross(this.camera.forward(), new Vec3([result.x, result.y, result.z]));
+
+      if (this.fps) {
+        this.camera.rotate(axis, GUI.rotationSpeed);
+      }
+      else {
+        this.camera.rotate(axis, GUI.rotationSpeed, this.camera.target());
+      }
+    }
   }
 
   /**
@@ -143,6 +204,20 @@ export class GUI implements IGUI {
     this.dragging = false;
     this.prevX = 0;
     this.prevY = 0;
+  }
+
+  public zoom(wheel: WheelEvent): void {
+    let deltaX = wheel.deltaX;
+    let deltaY = wheel.deltaY;
+
+    let zoomAmount = 1.0 + GUI.zoomSpeed;
+    if(deltaY < 0) { // Scroll up  /zoomAmount
+      this.camera.zoom(1/zoomAmount);
+    }
+    else if (deltaY > 0) { // Scroll down  *zoomAmount
+      this.camera.zoom(zoomAmount);
+    }
+    console.log("Scroll amount: " + deltaY);
   }
 
   /**
@@ -158,7 +233,7 @@ export class GUI implements IGUI {
        We can use KeyDown due to auto repeating.
      */
 
-	// TOOD: Your code for key handling
+    // TOOD: Your code for key handling
 
     switch (key.code) {
       case "KeyW": {
@@ -181,13 +256,20 @@ export class GUI implements IGUI {
         this.reset();
         break;
       }
+      case "KeyT": {
+        this.resetUp();
+        break;
+      }
+      case "KeyY": {
+        this.resetRight();
+        break;
+      }
       case "ArrowLeft": {
-        // SUpposed to be roll but using for debugging sponge
-        this.camera.yaw(GUI.rollSpeed, false);
+        this.camera.roll(GUI.rollSpeed, false);
         break;
       }
       case "ArrowRight": {
-        this.camera.yaw(GUI.rollSpeed, true);
+        this.camera.roll(GUI.rollSpeed, true);
         break;
       }
       case "ArrowUp": {
@@ -212,6 +294,30 @@ export class GUI implements IGUI {
       }
       case "Digit4": {
         this.sponge.setLevel(4);
+        break;
+      }
+      case "Digit5": {
+        this.sponge.setLevel(5);
+        break;
+      }
+      case "Digit6": {
+        this.sponge.setLevel(6);
+        break;
+      }
+      case "Digit7": {
+        this.sponge.setLevel(7);
+        break;
+      }
+      case "Digit8": {
+        this.sponge.setLevel(8);
+        break;
+      }
+      case "Digit9": {
+        this.sponge.setLevel(9);
+        break;
+      }
+      case "Digit0": {
+        this.sponge.setLevel(0);
         break;
       }
       default: {
@@ -242,6 +348,10 @@ export class GUI implements IGUI {
 
     canvas.addEventListener("mouseup", (mouse: MouseEvent) =>
       this.dragEnd(mouse)
+    );
+
+    canvas.addEventListener("wheel", (wheel : WheelEvent) =>
+      this.zoom(wheel)
     );
 
     /* Event listener to stop the right click menu */

@@ -331,6 +331,13 @@ export class Camera {
     }
   }
 
+  public zoom(zoomSpeed: number): void {
+    this._fov *= zoomSpeed;
+    // this._aspect *= zoomSpeed;
+    // this._zNear *= zoomSpeed;
+    // this._zFar *= zoomSpeed;
+  }
+
   // Camera::viewMatrix - returns the view matrix
   public viewMatrix(): Mat4 {
     const m: Mat4 = Mat4.lookAt(this._eye, this.target(), this._up);
