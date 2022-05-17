@@ -6,15 +6,15 @@
     <title>WebGL - Menger</title>
   </head>
   <body>
-    <span>Set Menger Sponge Depth with 1-5.
-          Not currently optimized, so depth > 6
-          is likely to slow down or crash your browser. 
-    </span>
     <canvas id="glCanvas" class="card" width="800" height="600">
       Your browser does not support HTML5 </canvas>
     <br />
 
     <section id="test-view" class="test-suite">
+      <span>Set Menger Sponge Depth with 1-5.
+          Not currently optimized, so depth > 6
+          is likely to slow down or crash your browser. 
+      </span><hr>
       <button id="run-button" v-on:click="run">Run Test Suite</button>
       <button id="run-button" v-on:click="expand_results(true)">Expand All Results</button>
       <button id="run-button" v-on:click="expand_results(false)">Hide All Results</button>
